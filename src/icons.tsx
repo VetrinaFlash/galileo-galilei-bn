@@ -1,4 +1,5 @@
 import type { ServiceIcon } from "./content";
+import { realLogo } from "./photos";
 
 const P = { fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 
@@ -34,7 +35,9 @@ export const PinIcon = () => (
 );
 
 /** Logo: monogramma con stella (omaggio a Galileo). Sostituibile con il logo vero in /public/logo.svg */
-export const Logo = ({ size = 40 }: { size?: number }) => (
+export const Logo = ({ size = 40 }: { size?: number }) => realLogo ? (
+  <img src={realLogo} alt="" width={size} height={size} style={{ objectFit: "contain", width: size, height: size }} />
+) : (
   <svg viewBox="0 0 48 48" width={size} height={size} aria-hidden="true">
     <circle cx="24" cy="24" r="22.5" fill="none" stroke="currentColor" strokeWidth="1.2" />
     <circle cx="24" cy="24" r="19" fill="none" stroke="currentColor" strokeWidth=".6" opacity=".6" />

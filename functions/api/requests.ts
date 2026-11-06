@@ -1,10 +1,12 @@
 // POST /api/requests → salva la richiesta di prenotazione inviata dal sito
-import { json, type Env } from "../_lib";
+import { ensureSchema, hasDb, json, noDb, type Env } from "../_lib";
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const clip = (v: unknown, n: number) => String(v ?? "").slice(0, n);
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+  if (!hasDb(env)) return noDb();
+  await ensureSchema(env);
   let b: Record<string, unknown>;
   try { b = await request.json(); } catch { return json({ error: "json" }, 400); }
   if (!DATE.test(String(b.checkIn)) || !DATE.test(String(b.checkOut)) || String(b.checkOut) <= String(b.checkIn)) return json({ error: "date" }, 400);

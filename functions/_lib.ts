@@ -11,12 +11,33 @@ export interface Env {
 export const json = (data: unknown, status = 200, extra: Record<string, string> = {}) =>
   new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json", ...extra } });
 
+// ───────── database: le tabelle si creano da sole al primo utilizzo ─────────
+const SCHEMA = [
+  "CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS requests (id TEXT PRIMARY KEY, created_at TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'nuova', data TEXT NOT NULL)",
+  "CREATE INDEX IF NOT EXISTS idx_requests_created ON requests (created_at DESC)",
+];
+let schemaReady: Promise<void> | null = null;
+export function ensureSchema(env: Env) {
+  if (!schemaReady) {
+    schemaReady = env.DB.batch(SCHEMA.map((q) => env.DB.prepare(q))).then(() => undefined);
+    schemaReady.catch(() => { schemaReady = null; });
+  }
+  return schemaReady;
+}
+
+/** true se il database è collegato (binding "DB"); altrimenti il sito resta in modalità demo */
+export const hasDb = (env: Env) => !!env.DB;
+export const noDb = () => json({ error: "database non collegato" }, 503);
+
 // ───────── impostazioni (tabella settings, una riga JSON) ─────────
 export async function getSettings(env: Env): Promise<Record<string, unknown>> {
+  await ensureSchema(env);
   const row = await env.DB.prepare("SELECT value FROM settings WHERE key = 'site'").first<{ value: string }>();
   return row ? JSON.parse(row.value) : {};
 }
 export async function putSettings(env: Env, s: unknown) {
+  await ensureSchema(env);
   await env.DB.prepare("INSERT INTO settings (key, value) VALUES ('site', ?1) ON CONFLICT(key) DO UPDATE SET value = excluded.value")
     .bind(JSON.stringify(s)).run();
 }

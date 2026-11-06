@@ -1,3 +1,5 @@
+import { photo } from "./photos";
+
 // ─────────────────────────────────────────────────────────────
 //  TUTTI I CONTENUTI DEL SITO STANNO QUI.
 //  Per personalizzare: cambia testi, prezzi e foto in questo file.
@@ -52,7 +54,7 @@ export const site = {
 };
 
 export const hero = {
-  photo: { src: "photos/demo-facciata.svg", alt: { it: "Il palazzo storico del B&B Galileo Galilei", en: "The historic building of B&B Galileo Galilei" } } as Photo,
+  photo: { src: photo("facciata"), alt: { it: "Il palazzo storico del B&B Galileo Galilei", en: "The historic building of B&B Galileo Galilei" } } as Photo,
   eyebrow: { it: "Bed & Breakfast nel centro di Caserta", en: "Bed & Breakfast in the heart of Caserta" },
   title: { it: "A dodici minuti a piedi dalla Reggia.", en: "A twelve-minute walk from the Royal Palace." },
   subtitle: {
@@ -107,7 +109,7 @@ export const rooms: Room[] = [
       { it: "Aria condizionata", en: "Air conditioning" },
       { it: "Smart TV", en: "Flat-screen TV" },
     ],
-    photo: { src: "photos/demo-matrimoniale.svg", alt: { it: "Camera matrimoniale", en: "Double room" } },
+    photo: { src: photo("matrimoniale"), alt: { it: "Camera matrimoniale", en: "Double room" } },
   },
   {
     id: "tripla",
@@ -123,7 +125,7 @@ export const rooms: Room[] = [
       { it: "Aria condizionata", en: "Air conditioning" },
       { it: "Macchina del caffè", en: "Coffee machine" },
     ],
-    photo: { src: "photos/demo-tripla.svg", alt: { it: "Camera tripla", en: "Triple room" } },
+    photo: { src: photo("tripla"), alt: { it: "Camera tripla", en: "Triple room" } },
   },
   {
     id: "terrazza",
@@ -139,7 +141,7 @@ export const rooms: Room[] = [
       { it: "Bagno privato", en: "Private bathroom" },
       { it: "Aria condizionata", en: "Air conditioning" },
     ],
-    photo: { src: "photos/demo-terrazza.svg", alt: { it: "Camera con terrazza", en: "Room with terrace" } },
+    photo: { src: photo("terrazza"), alt: { it: "Camera con terrazza", en: "Room with terrace" } },
   },
 ];
 
@@ -159,14 +161,14 @@ export const services: { icon: ServiceIcon; label: T }[] = [
 ];
 
 export const gallery: Photo[] = [
-  { src: "photos/demo-facciata.svg", alt: { it: "Il palazzo", en: "The building" } },
-  { src: "photos/demo-matrimoniale.svg", alt: { it: "Camera matrimoniale", en: "Double room" } },
-  { src: "photos/demo-bagno.svg", alt: { it: "Bagno", en: "Bathroom" } },
-  { src: "photos/demo-terrazza.svg", alt: { it: "Terrazza", en: "Terrace" } },
-  { src: "photos/demo-colazione.svg", alt: { it: "Colazione", en: "Breakfast" } },
-  { src: "photos/demo-salotto.svg", alt: { it: "Salotto comune", en: "Shared lounge" } },
-  { src: "photos/demo-tripla.svg", alt: { it: "Camera tripla", en: "Triple room" } },
-  { src: "photos/demo-giardino.svg", alt: { it: "Giardino", en: "Garden" } },
+  { src: photo("facciata"), alt: { it: "Il palazzo", en: "The building" } },
+  { src: photo("matrimoniale"), alt: { it: "Camera matrimoniale", en: "Double room" } },
+  { src: photo("bagno"), alt: { it: "Bagno", en: "Bathroom" } },
+  { src: photo("terrazza"), alt: { it: "Terrazza", en: "Terrace" } },
+  { src: photo("colazione"), alt: { it: "Colazione", en: "Breakfast" } },
+  { src: photo("salotto"), alt: { it: "Salotto comune", en: "Shared lounge" } },
+  { src: photo("tripla"), alt: { it: "Camera tripla", en: "Triple room" } },
+  { src: photo("giardino"), alt: { it: "Giardino", en: "Garden" } },
 ];
 
 export const nearby: { place: T; distance: T }[] = [

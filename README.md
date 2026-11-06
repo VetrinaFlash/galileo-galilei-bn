@@ -20,10 +20,10 @@ Sito per il B&B Galileo Galilei (Via Galileo Galilei 12, Caserta), con pannello 
 
 ## Contenuti
 
-- Testi, descrizioni e foto: `src/content.ts`
-- Prezzi, CIN, contatti, sconto e date chiuse: dal pannello (in demo valgono i valori di `src/content.ts`)
-- **Foto**: le `public/photos/demo-*.svg` sono **illustrazioni di prova**. Metti le foto vere in `public/photos/` (JPG, massimo 1600px di lato) e aggiorna i percorsi in `src/content.ts`.
-- **CIN**: quello in `src/content.ts` è **di prova** (`cinIsDemo: true`). Inserisci quello vero dal pannello e togli la spunta "codice di prova".
+- **Foto e logo**: trascina i file in `src/photos/` con i nomi indicati in [`src/photos/LEGGIMI.md`](src/photos/LEGGIMI.md) (`facciata.jpg`, `matrimoniale.jpg`, …, `logo.png`) e fai push. Le foto mancanti restano come illustrazioni di prova.
+- Testi e descrizioni: `src/content.ts`
+- Prezzi, CIN, contatti, sconto e date chiuse: **dal pannello** `/#admin`
+- **CIN**: quello iniziale è **di prova**. Inserisci quello vero dal pannello e togli la spunta "codice di prova".
 
 ## Sviluppo
 
@@ -33,19 +33,17 @@ npm run dev      # http://localhost:5173  ·  pannello: http://localhost:5173/#a
 npm run build    # output in dist/
 ```
 
-## Pubblicazione su Cloudflare Pages (con pannello reale)
+## Pubblicazione su Cloudflare Pages
 
-```bash
-npx wrangler d1 create galileo-galilei-bnb          # copia l'id in wrangler.toml
-npx wrangler d1 execute galileo-galilei-bnb --remote --file=schema.sql
-```
-
-1. Cloudflare → Workers & Pages → Create → Pages → collega questo repository.
+1. Workers & Pages → Create → Pages → collega questo repository, **production branch `main`**.
    Build command `npm run build`, output `dist`.
-2. Settings → Bindings → D1 database: variabile **`DB`** → `galileo-galilei-bnb`.
-3. Settings → Variables and Secrets → **`ADMIN_PASSWORD`** (tipo Secret): la password di Livia per il pannello.
-4. Collega il dominio, es. `bbgalileogalilei.it`.
-5. Livia entra su `/#admin` e incolla i link iCal di Booking e Airbnb in Impostazioni.
+2. Workers & Pages → D1 → Create database `galileo-galilei-bnb`. **Le tabelle si creano da sole** alla prima visita, non serve eseguire `schema.sql`.
+3. Progetto Pages → Settings → Bindings → D1 database: variabile **`DB`** → `galileo-galilei-bnb`.
+4. Settings → Variables and Secrets → **`ADMIN_PASSWORD`** (tipo Secret): la password di Livia per il pannello.
+5. Deployments → Retry deployment, perché le impostazioni valgono dal deploy successivo.
+6. Collega il dominio, es. `bbgalileogalilei.it`.
+
+Senza binding `DB` il sito funziona lo stesso, in modalità demo.
 
 API (cartella `functions/`):
 

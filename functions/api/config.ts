@@ -1,7 +1,8 @@
 // GET /api/config → impostazioni pubbliche + notti occupate (Booking/Airbnb + chiuse dal gestore)
-import { getSettings, json, portalBusy, type Env } from "../_lib";
+import { getSettings, hasDb, json, noDb, portalBusy, type Env } from "../_lib";
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
+  if (!hasDb(env)) return noDb();
   const s = await getSettings(env);
   const { busy, synced } = await portalBusy(env, s.icalUrls);
   const blocked = Array.isArray(s.blocked) ? (s.blocked as string[]) : [];
