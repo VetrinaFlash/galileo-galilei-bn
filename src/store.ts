@@ -55,7 +55,9 @@ export const mergeSettings = (s: Partial<Settings> | null | undefined): Settings
   const d = defaultSettings();
   if (!s) return d;
   const rooms = d.rooms.map((r) => ({ ...r, ...(s.rooms?.find((x) => x.id === r.id) ?? {}) }));
-  return { ...d, ...s, rooms, blocked: s.blocked ?? [], icalUrls: s.icalUrls ?? [] };
+  return { ...d, ...s, rooms, blocked: s.blocked ?? [], icalUrls: s.icalUrls ?? [],
+    // i contatti vuoti non devono mai lasciare il sito senza WhatsApp
+    whatsapp: s.whatsapp || d.whatsapp, phoneDisplay: s.phoneDisplay || d.phoneDisplay };
 };
 
 // ───────────── modalità demo (browser) ─────────────
@@ -103,7 +105,7 @@ export async function loadPublic(): Promise<PublicData> {
   }
 }
 
-export async function submitRequest(mode: Mode, req: Omit<BookingRequest, "id" | "createdAt" | "status">) {
+export async function submitRequest(mode: Mode, req: Omit<BookingRequest, "id" | "createdAt" | "status"> & { privacy: boolean; website?: string }) {
   const full: BookingRequest = { ...req, id: crypto.randomUUID?.() ?? String(Date.now()), createdAt: new Date().toISOString(), status: "nuova" };
   if (mode === "demo") {
     demoStore.saveRequests([full, ...demoStore.requests()]);
@@ -129,12 +131,14 @@ const authed = (init: RequestInit = {}): RequestInit => ({
 });
 
 export const adminApi = {
-  async login(mode: Mode, password: string): Promise<boolean> {
-    if (mode === "demo") { if (password.trim() === DEMO_PASSWORD) { adminToken.set("demo"); return true; } return false; }
+  /** restituisce "" se l'accesso è riuscito, altrimenti il messaggio di errore */
+  async login(mode: Mode, password: string): Promise<string> {
+    if (mode === "demo") { if (password.trim() === DEMO_PASSWORD) { adminToken.set("demo"); return ""; } return "Password non corretta"; }
     const r = await fetch("./api/admin/login", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ password }) });
-    if (!r.ok) return false;
-    adminToken.set(((await r.json()) as { token: string }).token);
-    return true;
+    const d = (await r.json().catch(() => ({}))) as { token?: string; error?: string };
+    if (!r.ok || !d.token) return d.error || "Accesso non riuscito";
+    adminToken.set(d.token);
+    return "";
   },
   async load(mode: Mode): Promise<{ settings: Settings; requests: BookingRequest[]; portalBusy: string[]; synced: boolean }> {
     if (mode === "demo") return { settings: demoStore.settings(), requests: demoStore.requests(), portalBusy: demoStore.busyFromPortals(), synced: false };

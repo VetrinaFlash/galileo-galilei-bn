@@ -27,6 +27,8 @@ const dict = {
   pick_checkout: { it: "Ora seleziona il giorno di partenza", en: "Now select your departure date" },
   room: { it: "Camera", en: "Room" },
   your_name: { it: "Il tuo nome", en: "Your name" },
+  privacy_accept: { it: "Accetto il trattamento dei dati per gestire la richiesta.", en: "I agree to the processing of my data to handle this request." },
+  privacy_link: { it: "Informativa privacy", en: "Privacy notice" },
   email_label: { it: "Email (ti mandiamo la conferma)", en: "Email (for your confirmation)" },
   notes: { it: "Note (orario di arrivo, animali, richieste)", en: "Notes (arrival time, pets, requests)" },
   nights: { it: "notti", en: "nights" },

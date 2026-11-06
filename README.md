@@ -27,6 +27,15 @@ Sito per il B&B Galileo Galilei (Via Galileo Galilei 12, Caserta), con pannello 
 
 **Modalità demo**: senza server (es. anteprima statica) tutto funziona salvando i dati nel browser. Password demo del pannello: `galileo`.
 
+## Sicurezza
+
+- **Pannello**: password solo in Cloudflare (`ADMIN_PASSWORD`, Secret, **minimo 10 caratteri**). Il login permette al massimo 8 tentativi ogni 15 minuti per IP e confronta la password a tempo costante. L'accesso dura 30 giorni: **cambiando la password, tutti i dispositivi vengono disconnessi**.
+- **Modulo prenotazione**: campo trappola anti-bot, massimo 6 richieste all'ora per IP, massimo 3 email al giorno verso lo stesso indirizzo (il modulo non può essere usato per mandare spam), date e camere controllate dal server.
+- **Impostazioni**: il server salva solo i campi previsti, con valori controllati. I link iCal non vengono mai mostrati al pubblico.
+- **Intestazioni di sicurezza** (`public/_headers`): CSP restrittiva, HSTS, niente iframe, nosniff. Le API private non vengono mai salvate in cache.
+- **Privacy**: consenso obbligatorio nel modulo, informativa in `src/Privacy.tsx` (**completare il nome del titolare**), richieste cancellate da sole dopo 24 mesi.
+- **Mai** mettere password o chiavi nel codice: vanno solo nelle variabili di Cloudflare.
+
 ## Contenuti
 
 - **Foto e logo**: trascina i file in `src/photos/` con i nomi indicati in [`src/photos/LEGGIMI.md`](src/photos/LEGGIMI.md) (`facciata.jpg`, `matrimoniale.jpg`, …, `logo.png`) e fai push. Le foto mancanti restano come illustrazioni di prova.

@@ -166,7 +166,7 @@ function Site() {
 
       <Booking lang={lang} value={booking} onChange={setBooking} busy={busy} synced={synced} rooms={rooms} discount={S.directDiscountPercent}
         whatsapp={S.whatsapp} phoneDisplay={S.phoneDisplay}
-        onSend={({ name, email, notes, total, roomName }) => submitRequest(data.mode, { name, email, roomName, notes, total, lang, checkIn: booking.checkIn, checkOut: booking.checkOut, roomId: booking.roomId, guests: booking.guests })} />
+        onSend={({ name, email, notes, total, roomName, privacy, website }) => submitRequest(data.mode, { name, email, roomName, notes, total, lang, privacy, website, checkIn: booking.checkIn, checkOut: booking.checkOut, roomId: booking.roomId, guests: booking.guests })} />
 
       <section id="servizi" className="section">
         <div className="wrap">

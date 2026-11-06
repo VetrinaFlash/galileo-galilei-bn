@@ -3,6 +3,7 @@ import { site, type Lang, type Room } from "./content";
 import { months, t, weekdays } from "./i18n";
 import { addDays, fmtDate, iso, nightsBetween, rangeHasBusy, today } from "./dates";
 import { PhoneIcon, WhatsAppIcon } from "./icons";
+import { PrivacyText } from "./Privacy";
 
 export type BookingState = { checkIn: string; checkOut: string; guests: number; roomId: string };
 
@@ -16,7 +17,7 @@ type Props = {
   discount: number;
   whatsapp: string;
   phoneDisplay: string;
-  onSend: (r: { name: string; email: string; notes: string; total: number; roomName: string }) => void;
+  onSend: (r: { name: string; email: string; notes: string; total: number; roomName: string; privacy: boolean; website: string }) => void;
 };
 
 function Month({ year, month, lang, value, busy, onPick }: {
@@ -58,6 +59,9 @@ export function Booking({ lang, value, onChange, busy, synced, rooms, discount: 
   const [offset, setOffset] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [privacy, setPrivacy] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
+  const [website, setWebsite] = useState(""); // campo trappola anti-bot
   const [notes, setNotes] = useState("");
   const base = today();
   const m1 = new Date(base.getFullYear(), base.getMonth() + offset, 1);
@@ -96,7 +100,7 @@ export function Booking({ lang, value, onChange, busy, synced, rooms, discount: 
     return lines.filter(Boolean).join("\n");
   }, [lang, room, checkIn, checkOut, nights, value.guests, name, email, notes, total]);
 
-  const ready = !!checkIn && !!checkOut && nights > 0 && !conflict;
+  const ready = !!checkIn && !!checkOut && nights > 0 && !conflict && privacy;
   const waHref = `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
 
   return (
@@ -153,6 +157,12 @@ export function Booking({ lang, value, onChange, busy, synced, rooms, discount: 
               <textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
             </label>
 
+            <input className="hp" tabIndex={-1} autoComplete="off" aria-hidden="true" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} />
+            <label className="consent">
+              <input type="checkbox" checked={privacy} onChange={(e) => setPrivacy(e.target.checked)} />
+              <span>{t("privacy_accept", lang)} <button type="button" className="link-btn" onClick={() => setShowPrivacy(true)}>{t("privacy_link", lang)}</button></span>
+            </label>
+
             <div className="summary">
               <div className="sum-dates">
                 <div><small>{t("checkin", lang)}</small><b>{checkIn ? fmtDate(checkIn, lang) : "—"}</b></div>
@@ -170,7 +180,7 @@ export function Booking({ lang, value, onChange, busy, synced, rooms, discount: 
             </div>
 
             <a className={`btn btn-wa ${ready ? "" : "disabled"}`} href={ready ? waHref : undefined} target="_blank" rel="noopener" aria-disabled={!ready}
-               onClick={(e) => { if (!ready) { e.preventDefault(); return; } onSend({ name, email, notes, total, roomName: room.name.it }); }}>
+               onClick={(e) => { if (!ready) { e.preventDefault(); return; } onSend({ name, email, notes, total, roomName: room.name.it, privacy, website }); }}>
               <WhatsAppIcon /> {t("send_whatsapp", lang)}
             </a>
             <p className="fine">
@@ -178,6 +188,14 @@ export function Booking({ lang, value, onChange, busy, synced, rooms, discount: 
             </p>
             <p className="fine muted">{t("no_payment", lang)}</p>
           </form>
+          {showPrivacy && (
+            <div className="lightbox" role="dialog" aria-modal="true" onClick={() => setShowPrivacy(false)}>
+              <div className="card privacy" onClick={(e) => e.stopPropagation()}>
+                <button type="button" className="lb-close dark" aria-label={t("close", lang)} onClick={() => setShowPrivacy(false)}>×</button>
+                <PrivacyText lang={lang} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

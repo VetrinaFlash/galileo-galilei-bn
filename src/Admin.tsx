@@ -73,7 +73,7 @@ export default function Admin() {
       <div className="adm-login">
         <form className="card adm-login-card" onSubmit={async (e) => {
           e.preventDefault(); setErr("");
-          try { if (await adminApi.login(mode, pw)) setLogged(true); else setErr("Password non corretta"); } catch { setErr("Server non raggiungibile"); }
+          try { const e2 = await adminApi.login(mode, pw); if (!e2) setLogged(true); else setErr(e2); } catch { setErr("Server non raggiungibile"); }
         }}>
           <div className="adm-brand"><Logo size={44} /><div><b>{site.name}</b><small>Pannello del gestore</small></div></div>
           <label><span>Password</span><input type="password" value={pw} onChange={(e) => setPw(e.target.value)} autoFocus autoComplete="current-password" /></label>

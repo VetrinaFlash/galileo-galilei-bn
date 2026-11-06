@@ -14,8 +14,9 @@ export interface Env {
   OWNER_EMAIL?: string;
 }
 
+/** risposta JSON; di default non viene mai salvata in cache (dati privati) */
 export const json = (data: unknown, status = 200, extra: Record<string, string> = {}) =>
-  new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json", ...extra } });
+  new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", ...extra } });
 
 // ───────── database: le tabelle si creano da sole al primo utilizzo ─────────
 const SCHEMA = [
@@ -23,6 +24,7 @@ const SCHEMA = [
   "CREATE TABLE IF NOT EXISTS requests (id TEXT PRIMARY KEY, created_at TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'nuova', data TEXT NOT NULL)",
   "CREATE INDEX IF NOT EXISTS idx_requests_created ON requests (created_at DESC)",
   "CREATE TABLE IF NOT EXISTS push_subs (endpoint TEXT PRIMARY KEY, data TEXT NOT NULL, created_at TEXT NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS rate (key TEXT PRIMARY KEY, count INTEGER NOT NULL, reset_at INTEGER NOT NULL)",
 ];
 let schemaReady: Promise<void> | null = null;
 export function ensureSchema(env: Env) {
@@ -84,20 +86,59 @@ export async function portalBusy(env: Env, urlsFromSettings: unknown): Promise<{
   return { busy: [...set].sort(), synced: ok > 0 };
 }
 
+// ───────── limiti anti-abuso (per IP, per email…) ─────────
+export const clientIp = (request: Request) => request.headers.get("cf-connecting-ip") || "sconosciuto";
+
+/** true se l'azione è consentita; conta i tentativi in una finestra di tempo */
+export async function rateLimit(env: Env, key: string, limit: number, windowSec: number): Promise<boolean> {
+  await ensureSchema(env);
+  const now = Math.floor(Date.now() / 1000);
+  const row = await env.DB.prepare("SELECT count, reset_at FROM rate WHERE key = ?1").bind(key).first<{ count: number; reset_at: number }>();
+  if (!row || row.reset_at <= now) {
+    await env.DB.prepare("INSERT INTO rate (key, count, reset_at) VALUES (?1, 1, ?2) ON CONFLICT(key) DO UPDATE SET count = 1, reset_at = excluded.reset_at")
+      .bind(key, now + windowSec).run();
+    return true;
+  }
+  if (row.count >= limit) return false;
+  await env.DB.prepare("UPDATE rate SET count = count + 1 WHERE key = ?1").bind(key).run();
+  return true;
+}
+
 // ───────── autenticazione pannello ─────────
+// Token firmato con la password (HMAC-SHA256) e con scadenza: se cambi ADMIN_PASSWORD
+// tutti i dispositivi collegati vengono disconnessi.
+const TOKEN_DAYS = 30;
+export const MIN_PASSWORD = 10;
+
 async function hmac(key: string, msg: string) {
   const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(key), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const sig = await crypto.subtle.sign("HMAC", k, new TextEncoder().encode(msg));
   return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
-export const makeToken = (env: Env) => hmac(env.ADMIN_PASSWORD, "gg-admin-v1");
+
+export function safeEqual(a: string, b: string) {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+/** confronto della password a tempo costante (confronta le firme, non i testi) */
+export async function passwordMatches(env: Env, password: string) {
+  const [a, b] = await Promise.all([hmac("gg-pw-check", password), hmac("gg-pw-check", env.ADMIN_PASSWORD)]);
+  return safeEqual(a, b);
+}
+
+export async function makeToken(env: Env) {
+  const exp = Math.floor(Date.now() / 1000) + TOKEN_DAYS * 86400;
+  return `${exp}.${await hmac(env.ADMIN_PASSWORD, `gg-admin-v2:${exp}`)}`;
+}
 
 export async function isAdmin(request: Request, env: Env) {
-  if (!env.ADMIN_PASSWORD) return false;
+  if (!env.ADMIN_PASSWORD || env.ADMIN_PASSWORD.length < MIN_PASSWORD) return false;
   const got = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
-  const want = await makeToken(env);
-  if (got.length !== want.length) return false;
-  let diff = 0;
-  for (let i = 0; i < got.length; i++) diff |= got.charCodeAt(i) ^ want.charCodeAt(i);
-  return diff === 0;
+  const [expStr, sig] = got.split(".");
+  const exp = Number(expStr);
+  if (!exp || !sig || exp < Date.now() / 1000) return false;
+  return safeEqual(sig, await hmac(env.ADMIN_PASSWORD, `gg-admin-v2:${exp}`));
 }
