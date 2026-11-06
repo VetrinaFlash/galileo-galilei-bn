@@ -1,6 +1,6 @@
 # B&B Galileo Galilei – sito di prenotazione diretta
 
-Sito per il B&B Galileo Galilei (Via Galileo Galilei 12, Caserta), con pannello per il gestore. Realizzato da VetrinaFlash.
+Sito per il B&B Galileo Galilei (Via Galileo Galilei 12, Caserta), con pannello per il gestore. Realizzato da Daniele Zobel.
 
 ## Cosa c'è
 

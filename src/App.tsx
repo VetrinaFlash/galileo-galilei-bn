@@ -255,7 +255,7 @@ function Site() {
           <div className="legal">
             <span>{t("cin_label", lang)}: {S.cin || t("cin_missing", lang)}{S.cin && S.cinIsDemo ? (lang === "it" ? " (di prova)" : " (sample)") : ""}</span>
             <span>Check-in {site.checkIn} · Check-out {site.checkOut}</span>
-            <span>© {new Date().getFullYear()} {site.name} · {t("made_by", lang)} <a href="https://vetrinaflash.it" target="_blank" rel="noopener">VetrinaFlash</a></span>
+            <span>© {new Date().getFullYear()} {site.name} · {t("made_by", lang)} Daniele Zobel</span>
             <a href="#admin" className="admin-link">{lang === "it" ? "Area riservata gestore" : "Owner area"}</a>
           </div>
         </div>
