@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="w" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e9e2d2"/><stop offset="1" stop-color="#f5efe3"/></linearGradient>
+    <linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c2a382"/><stop offset="1" stop-color="#9b7c5c"/></linearGradient>
+    <linearGradient id="win" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe3ef"/><stop offset="1" stop-color="#f6e7c9"/></linearGradient>
+    <radialGradient id="light" cx=".85" cy=".3" r=".6"><stop offset="0" stop-color="#fff6df" stop-opacity=".7"/><stop offset="1" stop-color="#fff6df" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#w)"/>
+  <rect x="0" y="0" width="1200" height="300" fill="#dfe6df" opacity=".6"/>
+  <rect y="296" width="1200" height="8" fill="#cbb79a"/>
+  <rect y="700" width="1200" height="200" fill="url(#f)"/>
+  <g stroke="#8b6c4d" stroke-width="2" opacity=".4"><path d="M0 740h1200M0 790h1200M0 850h1200"/></g>
+  <rect y="686" width="1200" height="16" fill="#e8dccb"/>
+  <!-- finestra -->
+  <rect x="900" y="150" width="220" height="380" fill="#f4ecdf"/><rect x="916" y="166" width="188" height="348" fill="url(#win)"/>
+  <rect x="1008" y="166" width="4" height="348" fill="#f4ecdf"/>
+  <rect x="884" y="134" width="252" height="14" fill="#c7b59a"/>
+  <rect width="1200" height="900" fill="url(#light)"/>
+  <!-- letto matrimoniale -->
+  <rect x="120" y="380" width="460" height="170" rx="16" fill="#c8a46a"/>
+  <rect x="100" y="520" width="520" height="150" rx="14" fill="#fbf8f2"/>
+  <rect x="100" y="570" width="520" height="80" rx="10" fill="#b5643c"/>
+  <path d="M100 595 h520" stroke="#e8c79b" stroke-width="4" opacity=".7"/>
+  <rect x="140" y="470" width="180" height="80" rx="24" fill="#fff"/><rect x="380" y="470" width="180" height="80" rx="24" fill="#fff"/>
+  <rect x="90" y="650" width="540" height="40" rx="10" fill="#e3d8c6"/>
+  <!-- letto singolo -->
+  <rect x="680" y="430" width="200" height="130" rx="14" fill="#c8a46a"/>
+  <rect x="660" y="540" width="240" height="130" rx="12" fill="#fbf8f2"/>
+  <rect x="660" y="585" width="240" height="70" rx="8" fill="#5c7566"/>
+  <rect x="700" y="494" width="160" height="66" rx="22" fill="#fff"/>
+  <rect x="650" y="650" width="260" height="40" rx="10" fill="#e3d8c6"/>
+  <!-- comodino tra i letti -->
+  <rect x="590" y="580" width="60" height="100" rx="6" fill="#a87a52"/>
+  <rect x="606" y="540" width="28" height="40" rx="4" fill="#efe3cf"/>
+  <!-- quadri -->
+  <rect x="200" y="150" width="140" height="180" fill="#c8a46a"/><rect x="210" y="160" width="120" height="160" fill="#efe3cf"/><circle cx="270" cy="230" r="34" fill="#7f9a86"/>
+  <rect x="380" y="180" width="140" height="120" fill="#c8a46a"/><rect x="390" y="190" width="120" height="100" fill="#efe3cf"/><path d="M390 270 q30 -40 60 -10 q30 -30 60 0 V290 H390z" fill="#b5643c" opacity=".6"/>
+  <!-- valigia -->
+  <rect x="950" y="600" width="120" height="90" rx="10" fill="#2f3b35"/><rect x="990" y="580" width="40" height="24" rx="6" fill="none" stroke="#2f3b35" stroke-width="7"/>
+  <ellipse cx="560" cy="800" rx="360" ry="50" fill="#d9c7a7" opacity=".8"/>
+</svg>

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { rooms, site, type Lang } from "./content";
+import { site, type Lang, type Room } from "./content";
 import { months, t, weekdays } from "./i18n";
 import { addDays, fmtDate, iso, nightsBetween, rangeHasBusy, today } from "./dates";
 import { PhoneIcon, WhatsAppIcon } from "./icons";
@@ -12,6 +12,11 @@ type Props = {
   onChange: (v: BookingState) => void;
   busy: Set<string>;
   synced: boolean;
+  rooms: Room[];
+  discount: number;
+  whatsapp: string;
+  phoneDisplay: string;
+  onSend: (r: { name: string; notes: string; total: number }) => void;
 };
 
 function Month({ year, month, lang, value, busy, onPick }: {
@@ -49,7 +54,7 @@ function Month({ year, month, lang, value, busy, onPick }: {
   );
 }
 
-export function Booking({ lang, value, onChange, busy, synced }: Props) {
+export function Booking({ lang, value, onChange, busy, synced, rooms, discount: discountPct, whatsapp, phoneDisplay, onSend }: Props) {
   const [offset, setOffset] = useState(0);
   const [name, setName] = useState("");
   const [notes, setNotes] = useState("");
@@ -62,7 +67,7 @@ export function Booking({ lang, value, onChange, busy, synced }: Props) {
   const nights = checkIn && checkOut ? nightsBetween(checkIn, checkOut) : 0;
   const conflict = checkIn && checkOut ? rangeHasBusy(checkIn, checkOut, busy) : false;
   const subtotal = nights * room.priceFrom;
-  const discount = Math.round((subtotal * site.directDiscountPercent) / 100);
+  const discount = Math.round((subtotal * discountPct) / 100);
   const total = subtotal - discount;
 
   const pick = (d: string) => {
@@ -90,7 +95,7 @@ export function Booking({ lang, value, onChange, busy, synced }: Props) {
   }, [lang, room, checkIn, checkOut, nights, value.guests, name, notes, total]);
 
   const ready = !!checkIn && !!checkOut && nights > 0 && !conflict;
-  const waHref = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
+  const waHref = `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
 
   return (
     <section id="prenota" className="section booking">
@@ -152,18 +157,18 @@ export function Booking({ lang, value, onChange, busy, synced }: Props) {
               {nights > 0 && !conflict && (
                 <dl>
                   <div><dt>{nights} {nights === 1 ? t("night", lang) : t("nights", lang)} × € {room.priceFrom}</dt><dd>€ {subtotal}</dd></div>
-                  {site.directDiscountPercent > 0 && <div className="disc"><dt>{t("direct_discount", lang)} −{site.directDiscountPercent}%</dt><dd>− € {discount}</dd></div>}
+                  {discountPct > 0 && <div className="disc"><dt>{t("direct_discount", lang)} −{discountPct}%</dt><dd>− € {discount}</dd></div>}
                   <div className="tot"><dt>{t("total", lang)}</dt><dd>€ {total}</dd></div>
                 </dl>
               )}
             </div>
 
             <a className={`btn btn-wa ${ready ? "" : "disabled"}`} href={ready ? waHref : undefined} target="_blank" rel="noopener" aria-disabled={!ready}
-               onClick={(e) => { if (!ready) e.preventDefault(); }}>
+               onClick={(e) => { if (!ready) { e.preventDefault(); return; } onSend({ name, notes, total }); }}>
               <WhatsAppIcon /> {t("send_whatsapp", lang)}
             </a>
             <p className="fine">
-              {t("or_call", lang)} <a href={`tel:${site.phoneTel}`}><PhoneIcon /> {site.phoneDisplay}</a>
+              {t("or_call", lang)} <a href={`tel:+${whatsapp}`}><PhoneIcon /> {phoneDisplay}</a>
             </p>
             <p className="fine muted">{t("no_payment", lang)}</p>
           </form>
@@ -173,5 +178,5 @@ export function Booking({ lang, value, onChange, busy, synced }: Props) {
   );
 }
 
-export const defaultBooking = (): BookingState => ({ checkIn: "", checkOut: "", guests: 2, roomId: rooms[0].id });
+export const defaultBooking = (roomId: string): BookingState => ({ checkIn: "", checkOut: "", guests: 2, roomId });
 export const tomorrow = () => iso(addDays(today(), 1));

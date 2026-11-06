@@ -1,0 +1,9 @@
+name = "galileo-galilei-bnb"
+pages_build_output_dir = "dist"
+compatibility_date = "2024-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "galileo-galilei-bnb"
+# Sostituisci con l'id restituito da: npx wrangler d1 create galileo-galilei-bnb
+database_id = "INSERISCI-ID-DATABASE"

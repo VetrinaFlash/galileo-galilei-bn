@@ -1,41 +1,59 @@
 # B&B Galileo Galilei – sito di prenotazione diretta
 
-Sito per il B&B Galileo Galilei (Via Galileo Galilei 12, Caserta). Realizzato da VetrinaFlash.
+Sito per il B&B Galileo Galilei (Via Galileo Galilei 12, Caserta), con pannello per il gestore. Realizzato da VetrinaFlash.
 
-- **Vite + React + TypeScript**, sito statico veloce
-- **Richiesta di prenotazione su WhatsApp**: l'ospite sceglie date, camera e ospiti, e il messaggio arriva già compilato a Livia. Nessun pagamento online.
-- **Calendario sincronizzato** con Booking e Airbnb tramite iCal (Cloudflare Pages Function in `functions/api/availability.ts`)
-- **Italiano / inglese**
-- **CIN** nel footer, come richiede la legge
-- Sconto per chi prenota direttamente (configurabile)
+## Cosa c'è
 
-## Personalizzare
+**Sito pubblico**
+- Camere con prezzi, servizi, galleria, posizione, FAQ, recensioni. Italiano e inglese.
+- **Calendario disponibilità**: l'ospite sceglie le date, vede il totale con lo sconto per chi prenota diretto e **invia la richiesta su WhatsApp** già compilata. Nessun pagamento online.
+- **CIN** nel footer, come richiede la legge.
+- Barra fissa su mobile con WhatsApp e Prenota.
 
-Tutti i testi, i prezzi e le foto stanno in **`src/content.ts`**. Le voci da verificare con la struttura sono segnate `DA CONFERMARE`.
+**Pannello gestore** (`/#admin`)
+- **Richieste**: tutte le richieste arrivate dal sito. *Conferma* chiude da sola le date sul calendario.
+- **Calendario**: tocca un giorno per chiuderlo o riaprirlo. Mostra le notti prese su Booking/Airbnb e il tasso di occupazione dei prossimi 30 giorni.
+- **Camere e prezzi**: prezzo a notte, ospiti massimi, camera visibile o nascosta.
+- **Impostazioni**: CIN, telefono, WhatsApp, email, sconto prenotazione diretta, link iCal di Booking/Airbnb.
 
-### Foto
-1. Copia le foto in `public/photos/` (es. `camera-matrimoniale.jpg`). JPG da massimo 1600px di lato, meglio sotto i 400 KB.
-2. In `src/content.ts` imposta `src: "photos/camera-matrimoniale.jpg"` nella foto giusta (hero, camere, galleria).
-3. Senza `src` il sito mostra un segnaposto elegante.
+**Modalità demo**: senza server (es. anteprima statica) tutto funziona salvando i dati nel browser. Password demo del pannello: `galileo`.
 
-### Logo
-Il monogramma "GG" è in `src/icons.tsx` (`Logo`). Per usare il logo vero, mettilo in `public/logo.svg` (o `.png`) e sostituisci il componente.
+## Contenuti
+
+- Testi, descrizioni e foto: `src/content.ts`
+- Prezzi, CIN, contatti, sconto e date chiuse: dal pannello (in demo valgono i valori di `src/content.ts`)
+- **Foto**: le `public/photos/demo-*.svg` sono **illustrazioni di prova**. Metti le foto vere in `public/photos/` (JPG, massimo 1600px di lato) e aggiorna i percorsi in `src/content.ts`.
+- **CIN**: quello in `src/content.ts` è **di prova** (`cinIsDemo: true`). Inserisci quello vero dal pannello e togli la spunta "codice di prova".
 
 ## Sviluppo
 
 ```bash
 npm install
-npm run dev      # http://localhost:5173
+npm run dev      # http://localhost:5173  ·  pannello: http://localhost:5173/#admin
 npm run build    # output in dist/
 ```
 
-## Pubblicazione su Cloudflare Pages
+## Pubblicazione su Cloudflare Pages (con pannello reale)
 
-1. Cloudflare → Workers & Pages → Create → Pages → collega questo repository
-2. Build command: `npm run build` · Output directory: `dist`
-3. Settings → Environment variables → `ICAL_URLS` = link iCal di Booking e Airbnb separati da virgola
-   - Booking: Extranet → Tariffe e disponibilità → Sincronizza calendari → Esporta
-   - Airbnb: Calendario → Disponibilità → Collega calendari → Esporta
-4. Collega il dominio (es. `bbgalileogalilei.it`)
+```bash
+npx wrangler d1 create galileo-galilei-bnb          # copia l'id in wrangler.toml
+npx wrangler d1 execute galileo-galilei-bnb --remote --file=schema.sql
+```
 
-Senza `ICAL_URLS` il calendario mostra date dimostrative.
+1. Cloudflare → Workers & Pages → Create → Pages → collega questo repository.
+   Build command `npm run build`, output `dist`.
+2. Settings → Bindings → D1 database: variabile **`DB`** → `galileo-galilei-bnb`.
+3. Settings → Variables and Secrets → **`ADMIN_PASSWORD`** (tipo Secret): la password di Livia per il pannello.
+4. Collega il dominio, es. `bbgalileogalilei.it`.
+5. Livia entra su `/#admin` e incolla i link iCal di Booking e Airbnb in Impostazioni.
+
+API (cartella `functions/`):
+
+| Rotta | Uso |
+|---|---|
+| `GET /api/config` | impostazioni pubbliche e notti occupate (iCal + chiuse a mano) |
+| `POST /api/requests` | salva una richiesta di prenotazione |
+| `POST /api/admin/login` | login del pannello |
+| `GET /api/admin/data` | impostazioni, richieste e calendari |
+| `PUT /api/admin/settings` | salva le impostazioni |
+| `PATCH/DELETE /api/admin/requests/:id` | cambia stato o elimina una richiesta |

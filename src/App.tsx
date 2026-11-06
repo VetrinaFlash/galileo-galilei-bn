@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
-import { faq, gallery, hero, highlights, nearby, rooms, services, site, whyDirect, type Lang, type Photo } from "./content";
+import { useEffect, useMemo, useState } from "react";
+import { faq, gallery, hero, highlights, nearby, rooms as baseRooms, services, site, whyDirect, type Lang, type Photo, type Room } from "./content";
 import { t } from "./i18n";
 import { Booking, defaultBooking, type BookingState } from "./Booking";
-import { addDays, demoBusy, iso, parseIso, today } from "./dates";
+import { addDays, iso, parseIso, today } from "./dates";
+import { loadPublic, submitRequest, defaultSettings, type PublicData } from "./store";
+import Admin from "./Admin";
 import { Logo, PhoneIcon, PinIcon, ServiceSvg, WhatsAppIcon } from "./icons";
 
 function Pic({ photo, lang, className = "", onClick }: { photo: Photo; lang: Lang; className?: string; onClick?: () => void }) {
@@ -20,26 +22,35 @@ function Pic({ photo, lang, className = "", onClick }: { photo: Photo; lang: Lan
   );
 }
 
-function useAvailability() {
-  const [busy, setBusy] = useState<Set<string>>(() => new Set(demoBusy()));
-  const [synced, setSynced] = useState(false);
+function useHash() {
+  const [hash, setHash] = useState(() => window.location.hash);
   useEffect(() => {
-    // Su Cloudflare Pages questa funzione legge il calendario iCal di Booking/Airbnb
-    fetch("./api/availability", { headers: { accept: "application/json" } })
-      .then((r) => (r.ok && r.headers.get("content-type")?.includes("json") ? r.json() : Promise.reject()))
-      .then((d: { busy: string[]; synced: boolean }) => {
-        if (d.synced) { setBusy(new Set(d.busy)); setSynced(true); }
-      })
-      .catch(() => {});
+    const on = () => setHash(window.location.hash);
+    window.addEventListener("hashchange", on);
+    return () => window.removeEventListener("hashchange", on);
   }, []);
-  return { busy, synced };
+  return hash;
 }
 
 export default function App() {
+  const hash = useHash();
+  if (hash === "#admin") return <Admin />;
+  return <Site />;
+}
+
+function Site() {
   const [lang, setLang] = useState<Lang>(() => (navigator.language?.startsWith("it") ? "it" : "en"));
-  const [booking, setBooking] = useState<BookingState>(defaultBooking);
+  const [booking, setBooking] = useState<BookingState>(() => defaultBooking(baseRooms[0].id));
   const [lightbox, setLightbox] = useState<number | null>(null);
-  const { busy, synced } = useAvailability();
+  const [data, setData] = useState<PublicData>({ mode: "demo", settings: defaultSettings(), busy: [], synced: false });
+  useEffect(() => { loadPublic().then(setData); }, []);
+  const S = data.settings;
+  const busy = useMemo(() => new Set(data.busy), [data.busy]);
+  const synced = data.synced;
+  const rooms: Room[] = useMemo(() => baseRooms
+    .map((r) => { const x = S.rooms.find((y) => y.id === r.id); return x ? { ...r, priceFrom: x.priceFrom, guests: x.guests, _v: x.visible } : { ...r, _v: true }; })
+    .filter((r) => r._v), [S.rooms]);
+  useEffect(() => { if (rooms.length && !rooms.some((r) => r.id === booking.roomId)) setBooking((b) => ({ ...b, roomId: rooms[0].id })); }, [rooms, booking.roomId]);
 
   useEffect(() => { document.documentElement.lang = lang; }, [lang]);
 
@@ -51,7 +62,7 @@ export default function App() {
   const minIn = iso(today());
   const minOut = booking.checkIn ? iso(addDays(parseIso(booking.checkIn), 1)) : iso(addDays(today(), 1));
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.mapsQuery)}`;
-  const waHello = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(lang === "it" ? `Ciao ${site.host}, vorrei informazioni sul B&B.` : `Hi ${site.host}, I'd like some information about the B&B.`)}`;
+  const waHello = `https://wa.me/${S.whatsapp}?text=${encodeURIComponent(lang === "it" ? `Ciao ${site.host}, vorrei informazioni sul B&B.` : `Hi ${site.host}, I'd like some information about the B&B.`)}`;
 
   return (
     <>
@@ -96,7 +107,7 @@ export default function App() {
             </label>
             <label className="g"><span>{t("guests", lang)}</span>
               <select value={booking.guests} onChange={(e) => setBooking((b) => ({ ...b, guests: Number(e.target.value) }))}>
-                {[1, 2, 3].map((n) => <option key={n} value={n}>{n}</option>)}
+                {Array.from({ length: Math.max(...rooms.map((r) => r.guests), 2) }, (_, i) => i + 1).map((n) => <option key={n} value={n}>{n}</option>)}
               </select>
             </label>
             <button className="btn" type="submit">{t("check_availability", lang)}</button>
@@ -116,11 +127,11 @@ export default function App() {
               </div>
             ))}
           </div>
-          {site.directDiscountPercent > 0 && (
+          {S.directDiscountPercent > 0 && (
             <p className="promo">
               {lang === "it"
-                ? <>Prenotando dal sito hai <b>−{site.directDiscountPercent}%</b> rispetto ai portali.</>
-                : <>Book on our website and save <b>{site.directDiscountPercent}%</b> compared to booking platforms.</>}
+                ? <>Prenotando dal sito hai <b>−{S.directDiscountPercent}%</b> rispetto ai portali.</>
+                : <>Book on our website and save <b>{S.directDiscountPercent}%</b> compared to booking platforms.</>}
             </p>
           )}
         </div>
@@ -153,7 +164,9 @@ export default function App() {
         </div>
       </section>
 
-      <Booking lang={lang} value={booking} onChange={setBooking} busy={busy} synced={synced} />
+      <Booking lang={lang} value={booking} onChange={setBooking} busy={busy} synced={synced} rooms={rooms} discount={S.directDiscountPercent}
+        whatsapp={S.whatsapp} phoneDisplay={S.phoneDisplay}
+        onSend={({ name, notes, total }) => submitRequest(data.mode, { name, notes, total, lang, checkIn: booking.checkIn, checkOut: booking.checkOut, roomId: booking.roomId, guests: booking.guests })} />
 
       <section id="servizi" className="section">
         <div className="wrap">
@@ -236,13 +249,14 @@ export default function App() {
           <div className="brand light"><Logo size={42} /><span><b>{site.name}</b><small>{site.address}</small></span></div>
           <div className="foot-contacts">
             <a href={waHello} target="_blank" rel="noopener"><WhatsAppIcon /> {t("write_whatsapp", lang)}</a>
-            <a href={`tel:${site.phoneTel}`}><PhoneIcon /> {site.phoneDisplay}</a>
-            {site.email && <a href={`mailto:${site.email}`}>{site.email}</a>}
+            <a href={`tel:+${S.whatsapp}`}><PhoneIcon /> {S.phoneDisplay}</a>
+            {S.email && <a href={`mailto:${S.email}`}>{S.email}</a>}
           </div>
           <div className="legal">
-            <span>{t("cin_label", lang)}: {site.cin || t("cin_missing", lang)}</span>
+            <span>{t("cin_label", lang)}: {S.cin || t("cin_missing", lang)}{S.cin && S.cinIsDemo ? (lang === "it" ? " (di prova)" : " (sample)") : ""}</span>
             <span>Check-in {site.checkIn} · Check-out {site.checkOut}</span>
             <span>© {new Date().getFullYear()} {site.name} · {t("made_by", lang)} <a href="https://vetrinaflash.it" target="_blank" rel="noopener">VetrinaFlash</a></span>
+            <a href="#admin" className="admin-link">{lang === "it" ? "Area riservata gestore" : "Owner area"}</a>
           </div>
         </div>
       </footer>

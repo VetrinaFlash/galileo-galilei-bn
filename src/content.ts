@@ -34,8 +34,10 @@ export const site = {
   email: "", // DA CONFERMARE
   address: "Via Galileo Galilei, 12 · 81100 Caserta (CE)",
   mapsQuery: "B&B Galileo Galilei, Via Galileo Galilei 12, Caserta",
-  /** Codice Identificativo Nazionale, obbligatorio sul sito. DA CONFERMARE */
-  cin: "",
+  /** Codice Identificativo Nazionale, obbligatorio sul sito.
+   *  QUESTO È UN CIN DI PROVA: sostituirlo con quello vero prima di andare online. */
+  cin: "IT061022C1A7KX93PQ",
+  cinIsDemo: true,
   checkIn: "15:00",
   checkOut: "11:00",
   /** sconto per chi prenota direttamente (0 per nasconderlo). DA CONFERMARE con Livia */
@@ -50,7 +52,7 @@ export const site = {
 };
 
 export const hero = {
-  photo: { src: "", alt: { it: "Il palazzo storico del B&B Galileo Galilei", en: "The historic building of B&B Galileo Galilei" } } as Photo,
+  photo: { src: "photos/demo-facciata.svg", alt: { it: "Il palazzo storico del B&B Galileo Galilei", en: "The historic building of B&B Galileo Galilei" } } as Photo,
   eyebrow: { it: "Bed & Breakfast nel centro di Caserta", en: "Bed & Breakfast in the heart of Caserta" },
   title: { it: "A dodici minuti a piedi dalla Reggia.", en: "A twelve-minute walk from the Royal Palace." },
   subtitle: {
@@ -105,7 +107,7 @@ export const rooms: Room[] = [
       { it: "Aria condizionata", en: "Air conditioning" },
       { it: "Smart TV", en: "Flat-screen TV" },
     ],
-    photo: { src: "", alt: { it: "Camera matrimoniale", en: "Double room" } },
+    photo: { src: "photos/demo-matrimoniale.svg", alt: { it: "Camera matrimoniale", en: "Double room" } },
   },
   {
     id: "tripla",
@@ -121,7 +123,7 @@ export const rooms: Room[] = [
       { it: "Aria condizionata", en: "Air conditioning" },
       { it: "Macchina del caffè", en: "Coffee machine" },
     ],
-    photo: { src: "", alt: { it: "Camera tripla", en: "Triple room" } },
+    photo: { src: "photos/demo-tripla.svg", alt: { it: "Camera tripla", en: "Triple room" } },
   },
   {
     id: "terrazza",
@@ -137,7 +139,7 @@ export const rooms: Room[] = [
       { it: "Bagno privato", en: "Private bathroom" },
       { it: "Aria condizionata", en: "Air conditioning" },
     ],
-    photo: { src: "", alt: { it: "Camera con terrazza", en: "Room with terrace" } },
+    photo: { src: "photos/demo-terrazza.svg", alt: { it: "Camera con terrazza", en: "Room with terrace" } },
   },
 ];
 
@@ -157,14 +159,14 @@ export const services: { icon: ServiceIcon; label: T }[] = [
 ];
 
 export const gallery: Photo[] = [
-  { alt: { it: "Ingresso del palazzo", en: "Building entrance" } },
-  { alt: { it: "Camera matrimoniale", en: "Double room" } },
-  { alt: { it: "Bagno", en: "Bathroom" } },
-  { alt: { it: "Terrazza", en: "Terrace" } },
-  { alt: { it: "Colazione", en: "Breakfast" } },
-  { alt: { it: "Salotto comune", en: "Shared lounge" } },
-  { alt: { it: "Camera tripla", en: "Triple room" } },
-  { alt: { it: "Giardino", en: "Garden" } },
+  { src: "photos/demo-facciata.svg", alt: { it: "Il palazzo", en: "The building" } },
+  { src: "photos/demo-matrimoniale.svg", alt: { it: "Camera matrimoniale", en: "Double room" } },
+  { src: "photos/demo-bagno.svg", alt: { it: "Bagno", en: "Bathroom" } },
+  { src: "photos/demo-terrazza.svg", alt: { it: "Terrazza", en: "Terrace" } },
+  { src: "photos/demo-colazione.svg", alt: { it: "Colazione", en: "Breakfast" } },
+  { src: "photos/demo-salotto.svg", alt: { it: "Salotto comune", en: "Shared lounge" } },
+  { src: "photos/demo-tripla.svg", alt: { it: "Camera tripla", en: "Triple room" } },
+  { src: "photos/demo-giardino.svg", alt: { it: "Giardino", en: "Garden" } },
 ];
 
 export const nearby: { place: T; distance: T }[] = [

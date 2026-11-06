@@ -1,2 +1,0 @@
-Metti qui le foto del B&B (JPG, massimo 1600px di lato).
-Poi collegale in src/content.ts con src: "photos/nome-file.jpg".

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="w" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#efe6d8"/><stop offset=".55" stop-color="#f7f0e4"/><stop offset="1" stop-color="#e6dac7"/></linearGradient>
+    <linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98a5f"/><stop offset="1" stop-color="#8f6441"/></linearGradient>
+    <linearGradient id="win" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe3ef"/><stop offset="1" stop-color="#f6e7c9"/></linearGradient>
+    <linearGradient id="sheet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e9e3d8"/></linearGradient>
+    <linearGradient id="throw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3f5b4c"/><stop offset="1" stop-color="#2f4639"/></linearGradient>
+    <radialGradient id="light" cx=".22" cy=".3" r=".6"><stop offset="0" stop-color="#fff6df" stop-opacity=".75"/><stop offset="1" stop-color="#fff6df" stop-opacity="0"/></radialGradient>
+    <radialGradient id="lamp" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe6b0" stop-opacity=".9"/><stop offset="1" stop-color="#ffe6b0" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#w)"/>
+  <rect y="690" width="1200" height="210" fill="url(#f)"/>
+  <g stroke="#7d5536" stroke-width="2" opacity=".35"><path d="M0 730h1200M0 780h1200M0 840h1200"/><path d="M180 690v40M520 730v50M860 690v40M300 780v60M700 780v60M1050 780v60"/></g>
+  <rect y="676" width="1200" height="16" fill="#e8dccb"/>
+  <!-- finestra -->
+  <rect x="70" y="150" width="230" height="400" fill="#f4ecdf"/>
+  <rect x="88" y="168" width="194" height="364" fill="url(#win)"/>
+  <rect x="183" y="168" width="4" height="364" fill="#f4ecdf"/><rect x="88" y="340" width="194" height="4" fill="#f4ecdf"/>
+  <path d="M40 130 h290 v14 H40z" fill="#c7b59a"/>
+  <path d="M44 144 q30 220 10 430 h56 q-10 -240 30 -430z" fill="#efe3cf" opacity=".95"/>
+  <path d="M326 144 q-30 220 -10 430 h-56 q10 -240 -30 -430z" fill="#efe3cf" opacity=".95"/>
+  <rect width="1200" height="900" fill="url(#light)"/>
+  <!-- quadro -->
+  <rect x="520" y="150" width="240" height="160" fill="#c8a46a"/>
+  <rect x="532" y="162" width="216" height="136" fill="#e9dcc2"/>
+  <path d="M532 270 q60 -60 110 -20 q50 -40 106 10 V298 H532z" fill="#7f9a86"/>
+  <circle cx="700" cy="200" r="16" fill="#e8b973"/>
+  <!-- testiera -->
+  <rect x="370" y="360" width="540" height="200" rx="18" fill="#6e7f74"/>
+  <g stroke="#5b6b61" stroke-width="3"><path d="M460 372v176M550 372v176M640 372v176M730 372v176M820 372v176"/></g>
+  <!-- letto -->
+  <rect x="340" y="520" width="600" height="150" rx="14" fill="url(#sheet)"/>
+  <path d="M340 600 h600 v70 a14 14 0 0 1 -14 14 H354 a14 14 0 0 1 -14 -14z" fill="#ece6db"/>
+  <rect x="330" y="640" width="620" height="44" rx="10" fill="#d9cfbf"/>
+  <rect x="340" y="560" width="600" height="80" rx="10" fill="url(#throw)"/>
+  <path d="M340 586 h600" stroke="#c9b27a" stroke-width="4" opacity=".7"/>
+  <rect x="400" y="470" width="210" height="90" rx="26" fill="#fbf8f2"/><rect x="670" y="470" width="210" height="90" rx="26" fill="#fbf8f2"/>
+  <rect x="450" y="492" width="150" height="66" rx="22" fill="#c98a5e"/><rect x="720" y="492" width="150" height="66" rx="22" fill="#d6b48a"/>
+  <rect x="360" y="684" width="16" height="30" fill="#5d4330"/><rect x="904" y="684" width="16" height="30" fill="#5d4330"/>
+  <!-- comodini e lampade -->
+  <g>
+    <rect x="215" y="560" width="110" height="120" rx="6" fill="#a87a52"/><rect x="215" y="600" width="110" height="4" fill="#8d6443"/>
+    <circle cx="270" cy="630" r="4" fill="#e8c88a"/>
+    <circle cx="270" cy="470" r="110" fill="url(#lamp)"/>
+    <rect x="265" y="500" width="10" height="60" fill="#b9a183"/><path d="M230 500 h80 l-14 -56 h-52z" fill="#f6ead2"/>
+  </g>
+  <g>
+    <rect x="955" y="560" width="110" height="120" rx="6" fill="#a87a52"/><rect x="955" y="600" width="110" height="4" fill="#8d6443"/>
+    <circle cx="1010" cy="630" r="4" fill="#e8c88a"/>
+    <circle cx="1010" cy="470" r="110" fill="url(#lamp)"/>
+    <rect x="1005" y="500" width="10" height="60" fill="#b9a183"/><path d="M970 500 h80 l-14 -56 h-52z" fill="#f6ead2"/>
+    <rect x="975" y="540" width="26" height="20" rx="3" fill="#2f3b35"/>
+  </g>
+  <!-- tappeto -->
+  <ellipse cx="640" cy="800" rx="380" ry="56" fill="#d9c7a7" opacity=".85"/>
+  <ellipse cx="640" cy="800" rx="330" ry="42" fill="none" stroke="#b5643c" stroke-width="3" opacity=".5"/>
+  <!-- pianta -->
+  <rect x="1090" y="610" width="70" height="80" fill="#b5643c"/>
+  <path d="M1125 610 q-60 -90 -20 -170 M1125 610 q10 -110 50 -160 M1125 610 q-30 -60 -70 -80 M1125 610 q40 -40 70 -50" stroke="#4f7d45" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <g fill="#5c8a4f"><ellipse cx="1105" cy="440" rx="22" ry="12" transform="rotate(-50 1105 440)"/><ellipse cx="1175" cy="450" rx="22" ry="12" transform="rotate(40 1175 450)"/><ellipse cx="1055" cy="530" rx="22" ry="12" transform="rotate(20 1055 530)"/><ellipse cx="1195" cy="560" rx="20" ry="11" transform="rotate(-20 1195 560)"/><ellipse cx="1125" cy="500" rx="20" ry="11" transform="rotate(-80 1125 500)"/></g>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="w" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e9ddc8"/><stop offset="1" stop-color="#f4ecdd"/></linearGradient>
+    <linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a77b52"/><stop offset="1" stop-color="#7f5a3a"/></linearGradient>
+    <linearGradient id="sofa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5c7566"/><stop offset="1" stop-color="#465c4f"/></linearGradient>
+    <radialGradient id="lamp" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe3a6" stop-opacity=".85"/><stop offset="1" stop-color="#ffe3a6" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#w)"/>
+  <rect y="700" width="1200" height="200" fill="url(#f)"/>
+  <rect y="686" width="1200" height="16" fill="#ddd0bb"/>
+  <!-- volta -->
+  <path d="M0 0 h1200 v60 q-600 120 -1200 0z" fill="#e2d4bd"/>
+  <!-- libreria -->
+  <rect x="70" y="160" width="300" height="530" fill="#8f6a4a"/>
+  <g fill="#7a5a3d"><rect x="70" y="280" width="300" height="12"/><rect x="70" y="410" width="300" height="12"/><rect x="70" y="540" width="300" height="12"/></g>
+  <g>
+    <rect x="90" y="200" width="22" height="80" fill="#b5643c"/><rect x="114" y="210" width="18" height="70" fill="#2f3b35"/><rect x="134" y="196" width="24" height="84" fill="#c8a46a"/><rect x="160" y="214" width="16" height="66" fill="#7f9a86"/><rect x="200" y="230" width="60" height="50" rx="30" fill="#e9dcc2"/><rect x="290" y="204" width="20" height="76" fill="#a8323a"/><rect x="312" y="214" width="20" height="66" fill="#d9c7a7"/>
+    <rect x="90" y="330" width="80" height="80" fill="#efe3cf"/><path d="M96 400 q30 -50 68 0z" fill="#7f9a86"/><rect x="200" y="336" width="20" height="74" fill="#2f3b35"/><rect x="222" y="344" width="22" height="66" fill="#b5643c"/><rect x="246" y="330" width="18" height="80" fill="#c8a46a"/><rect x="300" y="360" width="40" height="50" fill="#d6b48a"/>
+    <rect x="90" y="470" width="24" height="70" fill="#7f9a86"/><rect x="116" y="462" width="22" height="78" fill="#d9c7a7"/><rect x="140" y="476" width="18" height="64" fill="#a8323a"/><rect x="230" y="480" width="110" height="60" rx="6" fill="#efe3cf"/>
+    <rect x="96" y="600" width="250" height="80" fill="#7a5a3d"/>
+  </g>
+  <!-- quadro grande -->
+  <rect x="560" y="170" width="380" height="250" fill="#c8a46a"/><rect x="574" y="184" width="352" height="222" fill="#efe3cf"/>
+  <path d="M574 360 q80 -70 160 -30 q90 -60 192 20 V406 H574z" fill="#8aa190"/><path d="M574 380 q120 -40 352 0 V406 H574z" fill="#5c7566"/>
+  <circle cx="860" cy="250" r="24" fill="#e8b973"/>
+  <!-- divano -->
+  <rect x="480" y="470" width="560" height="140" rx="40" fill="url(#sofa)"/>
+  <rect x="450" y="540" width="620" height="130" rx="30" fill="#536b5d"/>
+  <rect x="510" y="540" width="250" height="70" rx="20" fill="#61796b"/><rect x="760" y="540" width="250" height="70" rx="20" fill="#61796b"/>
+  <rect x="430" y="510" width="70" height="170" rx="30" fill="#4b6355"/><rect x="1020" y="510" width="70" height="170" rx="30" fill="#4b6355"/>
+  <rect x="540" y="480" width="110" height="90" rx="24" fill="#c98a5e"/><rect x="880" y="480" width="110" height="90" rx="24" fill="#e6d4b3"/>
+  <rect x="470" y="670" width="16" height="30" fill="#3a2a1d"/><rect x="1034" y="670" width="16" height="30" fill="#3a2a1d"/>
+  <!-- tavolino -->
+  <ellipse cx="760" cy="790" rx="190" ry="36" fill="#000" opacity=".12"/>
+  <ellipse cx="760" cy="745" rx="180" ry="34" fill="#3a2a1d"/><rect x="620" y="745" width="12" height="50" fill="#3a2a1d"/><rect x="888" y="745" width="12" height="50" fill="#3a2a1d"/>
+  <rect x="690" y="712" width="110" height="18" rx="3" fill="#efe3cf"/><rect x="700" y="698" width="90" height="16" rx="3" fill="#b5643c"/>
+  <path d="M830 700 h40 v30 h-40z" fill="#e8e2d6"/><path d="M850 700 v-50" stroke="#4f7d45" stroke-width="4"/><circle cx="850" cy="644" r="12" fill="#e8746a"/>
+  <!-- lampada a stelo -->
+  <circle cx="1130" cy="330" r="160" fill="url(#lamp)"/>
+  <rect x="1126" y="360" width="8" height="330" fill="#2d2a26"/><path d="M1080 360 h100 l-20 -70 h-60z" fill="#f6ead2"/><ellipse cx="1130" cy="692" rx="40" ry="8" fill="#2d2a26"/>
+  <!-- tappeto -->
+  <path d="M380 860 L460 760 H1060 L1140 860z" fill="#b5643c" opacity=".35"/>
+</svg>

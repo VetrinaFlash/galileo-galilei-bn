@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f8fb0"/><stop offset=".45" stop-color="#e7b88f"/><stop offset=".75" stop-color="#f6cf96"/></linearGradient>
+    <radialGradient id="sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff2cc"/><stop offset=".4" stop-color="#ffd690" stop-opacity=".8"/><stop offset="1" stop-color="#ffd690" stop-opacity="0"/></radialGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c97e55"/><stop offset="1" stop-color="#9d5a38"/></linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#sky)"/>
+  <circle cx="820" cy="430" r="230" fill="url(#sun)"/>
+  <circle cx="820" cy="430" r="46" fill="#fff0c8"/>
+  <!-- colline -->
+  <path d="M0 470 q200 -90 420 -40 q220 -80 460 -10 q190 -50 320 0 V900 H0z" fill="#8a8a7a" opacity=".55"/>
+  <!-- Reggia in lontananza -->
+  <g fill="#b48c6a" opacity=".85">
+    <rect x="300" y="430" width="560" height="70"/><rect x="540" y="400" width="80" height="30"/><path d="M548 400 l32 -26 l32 26z"/>
+    <rect x="290" y="420" width="40" height="80"/><rect x="830" y="420" width="40" height="80"/>
+  </g>
+  <g fill="#e6c9a5" opacity=".8"><rect x="340" y="446" width="10" height="14"/><rect x="370" y="446" width="10" height="14"/><rect x="400" y="446" width="10" height="14"/><rect x="430" y="446" width="10" height="14"/><rect x="460" y="446" width="10" height="14"/><rect x="490" y="446" width="10" height="14"/><rect x="660" y="446" width="10" height="14"/><rect x="690" y="446" width="10" height="14"/><rect x="720" y="446" width="10" height="14"/><rect x="750" y="446" width="10" height="14"/><rect x="780" y="446" width="10" height="14"/></g>
+  <!-- tetti -->
+  <path d="M0 520 h140 v-30 l60 -30 l60 30 v30 h120 v-20 h160 v40 h200 v-30 l50 -25 l50 25 v30 h160 v-15 h200 V900 H0z" fill="#b27654"/>
+  <path d="M0 560 h1200 V900 H0z" fill="#9b6446"/>
+  <!-- parapetto -->
+  <rect y="600" width="1200" height="22" fill="#efe3cf"/>
+  <g fill="#e5d6bd"><rect x="30" y="622" width="26" height="110" rx="10"/><rect x="110" y="622" width="26" height="110" rx="10"/><rect x="190" y="622" width="26" height="110" rx="10"/><rect x="270" y="622" width="26" height="110" rx="10"/><rect x="350" y="622" width="26" height="110" rx="10"/><rect x="430" y="622" width="26" height="110" rx="10"/><rect x="510" y="622" width="26" height="110" rx="10"/><rect x="590" y="622" width="26" height="110" rx="10"/><rect x="670" y="622" width="26" height="110" rx="10"/><rect x="750" y="622" width="26" height="110" rx="10"/><rect x="830" y="622" width="26" height="110" rx="10"/><rect x="910" y="622" width="26" height="110" rx="10"/><rect x="990" y="622" width="26" height="110" rx="10"/><rect x="1070" y="622" width="26" height="110" rx="10"/><rect x="1150" y="622" width="26" height="110" rx="10"/></g>
+  <rect y="730" width="1200" height="170" fill="url(#floor)"/>
+  <g stroke="#8a4d2f" stroke-width="2" opacity=".5"><path d="M0 770h1200M0 820h1200M0 880h1200M150 730l-40 170M400 730l-20 170M650 730v170M900 730l20 170M1120 730l40 170"/></g>
+  <!-- tavolino e sedie -->
+  <ellipse cx="600" cy="880" rx="190" ry="20" fill="#000" opacity=".15"/>
+  <ellipse cx="600" cy="700" rx="150" ry="34" fill="#2f3b35"/>
+  <rect x="592" y="700" width="16" height="170" fill="#2f3b35"/><path d="M540 870 h120" stroke="#2f3b35" stroke-width="10" stroke-linecap="round"/>
+  <g fill="none" stroke="#2f3b35" stroke-width="9" stroke-linecap="round">
+    <path d="M330 610 v260 M330 760 h120 M450 760 v110 M330 640 q60 -20 110 0"/>
+    <path d="M870 610 v260 M870 760 h-120 M750 760 v110 M870 640 q-60 -20 -110 0"/>
+  </g>
+  <rect x="330" y="740" width="120" height="22" rx="6" fill="#b5643c"/><rect x="750" y="740" width="120" height="22" rx="6" fill="#b5643c"/>
+  <!-- calici e bottiglia -->
+  <rect x="604" y="618" width="18" height="60" rx="5" fill="#3e5d40"/><rect x="608" y="604" width="10" height="18" fill="#3e5d40"/>
+  <path d="M556 650 q14 30 28 0 z" fill="#8c2f39"/><path d="M556 650 q14 34 28 0" stroke="#fff" stroke-width="2" fill="none" opacity=".7"/><path d="M570 666 v20 M562 688 h16" stroke="#fff" stroke-width="2" opacity=".8"/>
+  <path d="M640 650 q14 30 28 0 z" fill="#8c2f39"/><path d="M640 650 q14 34 28 0" stroke="#fff" stroke-width="2" fill="none" opacity=".7"/><path d="M654 666 v20 M646 688 h16" stroke="#fff" stroke-width="2" opacity=".8"/>
+  <!-- vasi -->
+  <rect x="40" y="640" width="120" height="100" fill="#b5643c"/><ellipse cx="100" cy="610" rx="90" ry="70" fill="#4f7d45"/><ellipse cx="80" cy="580" rx="50" ry="40" fill="#6c9a5b"/>
+  <g fill="#e8746a"><circle cx="60" cy="570" r="7"/><circle cx="110" cy="555" r="7"/><circle cx="140" cy="600" r="6"/><circle cx="85" cy="610" r="6"/></g>
+  <rect x="1040" y="620" width="110" height="120" fill="#b5643c"/>
+  <path d="M1095 620 q-20 -140 -70 -190 M1095 620 q10 -150 60 -200 M1095 620 q-50 -60 -100 -60 M1095 620 q40 -60 90 -70" stroke="#4f7d45" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <!-- lucine -->
+  <path d="M0 140 q300 120 600 60 q300 -60 600 40" stroke="#3a2f26" stroke-width="2" fill="none"/>
+  <g fill="#ffe7a8"><circle cx="80" cy="172" r="7"/><circle cx="200" cy="205" r="7"/><circle cx="330" cy="222" r="7"/><circle cx="460" cy="220" r="7"/><circle cx="590" cy="202" r="7"/><circle cx="720" cy="175" r="7"/><circle cx="850" cy="160" r="7"/><circle cx="980" cy="162" r="7"/><circle cx="1110" cy="175" r="7"/></g>
+</svg>

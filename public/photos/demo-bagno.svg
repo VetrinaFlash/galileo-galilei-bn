@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="tile" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="60" height="60" fill="#eef1ee"/><path d="M0 0H60V60" fill="none" stroke="#d6dcd7" stroke-width="2"/></pattern>
+    <pattern id="tile2" width="40" height="80" patternUnits="userSpaceOnUse"><rect width="40" height="80" fill="#5f7b6c"/><path d="M0 0H40V80" fill="none" stroke="#4e6759" stroke-width="2"/></pattern>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".55"/><stop offset=".5" stop-color="#dcebee" stop-opacity=".25"/><stop offset="1" stop-color="#ffffff" stop-opacity=".5"/></linearGradient>
+    <linearGradient id="mir" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6eef0"/><stop offset="1" stop-color="#bccdd2"/></linearGradient>
+    <linearGradient id="fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfc5b4"/><stop offset="1" stop-color="#a99c86"/></linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#tile)"/>
+  <rect x="0" y="0" width="470" height="760" fill="url(#tile2)"/>
+  <rect y="760" width="1200" height="140" fill="url(#fl)"/>
+  <!-- doccia -->
+  <rect x="150" y="130" width="14" height="70" fill="#9aa3a3"/><rect x="110" y="200" width="94" height="16" rx="8" fill="#b9c1c1"/>
+  <g stroke="#cfe3ea" stroke-width="2" opacity=".7"><path d="M120 225 l-20 300M140 225 l-6 300M160 225 l6 300M180 225 l18 300M195 225 l30 300"/></g>
+  <rect x="300" y="300" width="60" height="90" rx="6" fill="#f1ede6"/><rect x="306" y="300" width="48" height="12" fill="#2f3b35"/>
+  <rect x="40" y="740" width="420" height="24" fill="#e6e2da"/>
+  <rect x="460" y="90" width="12" height="670" fill="#a6aeae"/>
+  <rect x="40" y="90" width="430" height="670" fill="url(#glass)"/>
+  <path d="M120 120 l120 600" stroke="#fff" stroke-width="10" opacity=".25"/>
+  <!-- lavabo e specchio -->
+  <rect x="640" y="150" width="340" height="300" rx="150" fill="#c8a46a"/>
+  <rect x="654" y="164" width="312" height="272" rx="136" fill="url(#mir)"/>
+  <path d="M700 380 l140 -180" stroke="#fff" stroke-width="16" opacity=".35"/>
+  <rect x="600" y="520" width="420" height="40" rx="8" fill="#f4f1eb"/>
+  <rect x="610" y="560" width="400" height="200" fill="#8f6a4a"/>
+  <rect x="630" y="580" width="170" height="160" rx="6" fill="#a67c57"/><rect x="820" y="580" width="170" height="160" rx="6" fill="#a67c57"/>
+  <rect x="790" y="650" width="20" height="5" rx="2" fill="#d6b26c"/><rect x="810" y="650" width="20" height="5" rx="2" fill="#d6b26c"/>
+  <ellipse cx="810" cy="512" rx="120" ry="18" fill="#fbfaf7"/><ellipse cx="810" cy="512" rx="96" ry="11" fill="#e6e8e6"/>
+  <path d="M810 470 v30 M810 470 h26" stroke="#b7bfbf" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <!-- asciugamani -->
+  <rect x="1060" y="300" width="100" height="10" rx="5" fill="#b7bfbf"/>
+  <rect x="1068" y="306" width="84" height="230" rx="6" fill="#f2ebe0"/><rect x="1068" y="480" width="84" height="14" fill="#b5643c" opacity=".7"/>
+  <rect x="660" y="490" width="70" height="26" rx="4" fill="#f2ebe0"/><rect x="666" y="470" width="58" height="22" rx="4" fill="#d9c7a7"/>
+  <!-- pianta -->
+  <rect x="930" y="460" width="60" height="58" rx="8" fill="#e8e2d6"/>
+  <g fill="#4f7d45"><ellipse cx="945" cy="430" rx="12" ry="40" transform="rotate(-20 945 430)"/><ellipse cx="965" cy="420" rx="12" ry="46"/><ellipse cx="985" cy="432" rx="12" ry="40" transform="rotate(22 985 432)"/></g>
+  <rect x="520" y="790" width="240" height="70" rx="10" fill="#e9dfcf"/>
+</svg>
