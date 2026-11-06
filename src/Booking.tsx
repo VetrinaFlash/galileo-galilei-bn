@@ -16,7 +16,7 @@ type Props = {
   discount: number;
   whatsapp: string;
   phoneDisplay: string;
-  onSend: (r: { name: string; notes: string; total: number }) => void;
+  onSend: (r: { name: string; email: string; notes: string; total: number; roomName: string }) => void;
 };
 
 function Month({ year, month, lang, value, busy, onPick }: {
@@ -57,6 +57,7 @@ function Month({ year, month, lang, value, busy, onPick }: {
 export function Booking({ lang, value, onChange, busy, synced, rooms, discount: discountPct, whatsapp, phoneDisplay, onSend }: Props) {
   const [offset, setOffset] = useState(0);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [notes, setNotes] = useState("");
   const base = today();
   const m1 = new Date(base.getFullYear(), base.getMonth() + offset, 1);
@@ -87,12 +88,13 @@ export function Booking({ lang, value, onChange, busy, synced, rooms, discount: 
       `• ${L ? "Partenza" : "Check-out"}: ${checkOut ? fmtDate(checkOut, lang) : "-"} (${nights} ${nights === 1 ? t("night", lang) : t("nights", lang)})`,
       `• ${L ? "Ospiti" : "Guests"}: ${value.guests}`,
       name ? `• ${L ? "Nome" : "Name"}: ${name}` : "",
+      email ? `• Email: ${email}` : "",
       notes ? `• ${L ? "Note" : "Notes"}: ${notes}` : "",
       nights ? `• ${L ? "Totale indicativo dal sito" : "Estimated total from website"}: € ${total}` : "",
       L ? "È disponibile?" : "Is it available?",
     ];
     return lines.filter(Boolean).join("\n");
-  }, [lang, room, checkIn, checkOut, nights, value.guests, name, notes, total]);
+  }, [lang, room, checkIn, checkOut, nights, value.guests, name, email, notes, total]);
 
   const ready = !!checkIn && !!checkOut && nights > 0 && !conflict;
   const waHref = `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
@@ -143,6 +145,10 @@ export function Booking({ lang, value, onChange, busy, synced, rooms, discount: 
               </label>
             </div>
             <label>
+              <span>{t("email_label", lang)}</span>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" inputMode="email" placeholder="nome@email.it" />
+            </label>
+            <label>
               <span>{t("notes", lang)}</span>
               <textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
             </label>
@@ -164,7 +170,7 @@ export function Booking({ lang, value, onChange, busy, synced, rooms, discount: 
             </div>
 
             <a className={`btn btn-wa ${ready ? "" : "disabled"}`} href={ready ? waHref : undefined} target="_blank" rel="noopener" aria-disabled={!ready}
-               onClick={(e) => { if (!ready) { e.preventDefault(); return; } onSend({ name, notes, total }); }}>
+               onClick={(e) => { if (!ready) { e.preventDefault(); return; } onSend({ name, email, notes, total, roomName: room.name.it }); }}>
               <WhatsAppIcon /> {t("send_whatsapp", lang)}
             </a>
             <p className="fine">

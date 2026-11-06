@@ -24,6 +24,8 @@ export type BookingRequest = {
   id: string;
   createdAt: string;
   name: string;
+  email?: string;
+  roomName?: string;
   checkIn: string;
   checkOut: string;
   roomId: string;
@@ -65,7 +67,7 @@ const write = (k: string, v: unknown) => { try { localStorage.setItem(k, JSON.st
 const sampleRequests = (): BookingRequest[] => {
   const t = today();
   return [
-    { id: "esempio-1", createdAt: new Date(Date.now() - 3600e3 * 5).toISOString(), name: "Marco (esempio)", checkIn: iso(addDays(t, 13)), checkOut: iso(addDays(t, 15)),
+    { id: "esempio-1", createdAt: new Date(Date.now() - 3600e3 * 5).toISOString(), name: "Marco (esempio)", email: "marco@esempio.it", checkIn: iso(addDays(t, 13)), checkOut: iso(addDays(t, 15)),
       roomId: "matrimoniale", guests: 2, notes: "Arriviamo verso le 18. Possiamo lasciare l'auto nel parcheggio?", total: 117, lang: "it", status: "nuova", sample: true },
     { id: "esempio-2", createdAt: new Date(Date.now() - 3600e3 * 30).toISOString(), name: "Sophie (example)", checkIn: iso(addDays(t, 20)), checkOut: iso(addDays(t, 23)),
       roomId: "terrazza", guests: 2, notes: "Visiting the Royal Palace, travelling with a small dog.", total: 203, lang: "en", status: "confermata", sample: true },
@@ -146,9 +148,32 @@ export const adminApi = {
     const r = await fetch("./api/admin/settings", authed({ method: "PUT", body: JSON.stringify(s) }));
     if (!r.ok) throw new Error("save");
   },
-  async saveRequests(mode: Mode, list: BookingRequest[], changed: BookingRequest | null, removedId?: string) {
-    if (mode === "demo") return demoStore.saveRequests(list);
-    if (changed) await fetch(`./api/admin/requests/${encodeURIComponent(changed.id)}`, authed({ method: "PATCH", body: JSON.stringify({ status: changed.status }) }));
+  /** restituisce true se è partita un'email all'ospite */
+  async saveRequests(mode: Mode, list: BookingRequest[], changed: BookingRequest | null, removedId?: string): Promise<boolean> {
+    if (mode === "demo") { demoStore.saveRequests(list); return false; }
+    let emailed = false;
+    if (changed) {
+      const r = await fetch(`./api/admin/requests/${encodeURIComponent(changed.id)}`, authed({ method: "PATCH", body: JSON.stringify({ status: changed.status }) }));
+      emailed = !!(await r.json().catch(() => ({})))?.emailed;
+    }
     if (removedId) await fetch(`./api/admin/requests/${encodeURIComponent(removedId)}`, authed({ method: "DELETE" }));
+    return emailed;
+  },
+  async pushKey(): Promise<string> {
+    const r = await fetch("./api/admin/push/key", authed());
+    if (!r.ok) throw new Error("key");
+    return ((await r.json()) as { publicKey: string }).publicKey;
+  },
+  async pushSubscribe(sub: PushSubscriptionJSON) {
+    const r = await fetch("./api/admin/push/subscribe", authed({ method: "POST", body: JSON.stringify(sub) }));
+    if (!r.ok) throw new Error("subscribe");
+  },
+  async pushTest(): Promise<number> {
+    const r = await fetch("./api/admin/push/test", authed({ method: "POST" }));
+    return ((await r.json()) as { sent: number }).sent ?? 0;
+  },
+  async emailTest(): Promise<{ ok: boolean; to?: string; error?: string }> {
+    const r = await fetch("./api/admin/email-test", authed({ method: "POST" }));
+    return r.json();
   },
 };

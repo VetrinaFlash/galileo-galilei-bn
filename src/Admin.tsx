@@ -23,6 +23,7 @@ export default function Admin() {
 
   useEffect(() => {
     document.title = "Pannello · " + site.name;
+    setupPwa();
     loadPublic().then((d) => {
       setMode(d.mode);
       if (adminToken.get() && (d.mode === "live" || adminToken.get() === "demo")) setLogged(true);
@@ -49,11 +50,12 @@ export default function Admin() {
     const list = requests.map((r) => (r.id === id ? { ...r, status } : r));
     setRequests(list);
     const changed = list.find((r) => r.id === id) ?? null;
-    await adminApi.saveRequests(mode, list, changed);
+    const emailed = await adminApi.saveRequests(mode, list, changed);
+    const mail = emailed ? " · email inviata all'ospite" : "";
     if (changed && status === "confermata") {
       const blocked = [...new Set([...settings.blocked, ...nightsOf(changed.checkIn, changed.checkOut)])].sort();
-      await saveSettings({ ...settings, blocked }, "Confermata · date chiuse sul calendario");
-    } else flash(status === "rifiutata" ? "Richiesta rifiutata" : "Aggiornato");
+      await saveSettings({ ...settings, blocked }, "Confermata · date chiuse" + mail);
+    } else flash((status === "rifiutata" ? "Richiesta rifiutata" : "Aggiornato") + mail);
   };
 
   const removeRequest = async (id: string) => {
@@ -148,6 +150,7 @@ function Requests({ list, onStatus, onRemove }: { list: BookingRequest[]; onStat
                 <div><small>Ospiti</small><b>{r.guests}</b></div>
                 <div><small>Totale indicato</small><b>€ {r.total}</b></div>
               </div>
+              {r.email && <p className="req-mail"><a href={`mailto:${r.email}`}>{r.email}</a></p>}
               {r.notes && <p className="req-notes">“{r.notes}”</p>}
               {r.lang === "en" && <p className="fine muted" style={{ textAlign: "left" }}>Ospite straniero (sito in inglese)</p>}
               <div className="req-actions">
@@ -285,6 +288,7 @@ function SettingsEditor({ settings, mode, onSave }: { settings: Settings; mode: 
         <h2>Impostazioni</h2>
         <p className="muted">Contatti, codice CIN, sconto per chi prenota dal sito e collegamento dei calendari.</p>
       </div>
+      <Notifications mode={mode} hasOwnerEmail={!!settings.email} />
       <div className="card adm-form">
         <h3>Codice CIN</h3>
         <label><span>CIN (Codice Identificativo Nazionale)</span>
@@ -321,5 +325,109 @@ function SettingsEditor({ settings, mode, onSave }: { settings: Settings; mode: 
         {mode === "demo" && <button className="link-btn" onClick={() => { demoStore.reset(); location.reload(); }}>Ripristina dati demo</button>}
       </div>
     </section>
+  );
+}
+
+// ───────── app sul telefono (PWA) e notifiche ─────────
+function setupPwa() {
+  const add = (tag: string, attrs: Record<string, string>) => {
+    const sel = `${tag}[${Object.entries(attrs).slice(0, 1).map(([k, v]) => `${k}="${v}"`).join("")}]`;
+    if (document.head.querySelector(sel)) return;
+    const el = document.createElement(tag);
+    Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    document.head.appendChild(el);
+  };
+  add("link", { rel: "manifest", href: "./manifest-admin.webmanifest" });
+  add("link", { rel: "apple-touch-icon", href: "./icons/apple-touch-icon.png" });
+  add("meta", { name: "apple-mobile-web-app-capable", content: "yes" });
+  add("meta", { name: "apple-mobile-web-app-title", content: "Pannello B&B" });
+  add("meta", { name: "apple-mobile-web-app-status-bar-style", content: "default" });
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(() => {});
+}
+
+const urlB64ToUint8 = (b64: string) => {
+  const pad = "=".repeat((4 - (b64.length % 4)) % 4);
+  const raw = atob((b64 + pad).replace(/-/g, "+").replace(/_/g, "/"));
+  return Uint8Array.from(raw, (c) => c.charCodeAt(0));
+};
+
+function Notifications({ mode, hasOwnerEmail }: { mode: Mode; hasOwnerEmail: boolean }) {
+  const supported = typeof window !== "undefined" && "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const standalone = window.matchMedia?.("(display-mode: standalone)").matches || (navigator as unknown as { standalone?: boolean }).standalone === true;
+  const [perm, setPerm] = useState<string>(supported ? Notification.permission : "unsupported");
+  const [subscribed, setSubscribed] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!supported) return;
+    navigator.serviceWorker.ready.then((reg) => reg.pushManager.getSubscription()).then((s) => setSubscribed(!!s)).catch(() => {});
+  }, [supported]);
+
+  const enable = async () => {
+    setBusy(true); setMsg("");
+    try {
+      const p = await Notification.requestPermission();
+      setPerm(p);
+      if (p !== "granted") { setMsg("Permesso negato: riattivalo dalle impostazioni del telefono."); return; }
+      const reg = await navigator.serviceWorker.register("./sw.js");
+      await navigator.serviceWorker.ready;
+      if (mode === "demo") { await reg.showNotification("Notifiche attive (demo)", { body: "Online riceverai un avviso a ogni nuova richiesta.", icon: "./icons/icon-192.png" }); setSubscribed(true); return; }
+      const key = await adminApi.pushKey();
+      const sub = (await reg.pushManager.getSubscription()) ?? (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlB64ToUint8(key) }));
+      await adminApi.pushSubscribe(sub.toJSON());
+      setSubscribed(true);
+      setMsg("Fatto: riceverai una notifica a ogni nuova richiesta.");
+    } catch { setMsg("Non è stato possibile attivare le notifiche su questo dispositivo."); }
+    finally { setBusy(false); }
+  };
+
+  const test = async () => {
+    setBusy(true); setMsg("");
+    try {
+      if (mode === "demo") { const reg = await navigator.serviceWorker.ready; await reg.showNotification("Nuova richiesta di prenotazione", { body: "Marco · 2 notti · Camera Matrimoniale (prova)", icon: "./icons/icon-192.png" }); return; }
+      const n = await adminApi.pushTest();
+      setMsg(n ? `Notifica inviata a ${n} ${n === 1 ? "dispositivo" : "dispositivi"}.` : "Nessun dispositivo iscritto: attiva prima le notifiche.");
+    } catch { setMsg("Invio non riuscito."); } finally { setBusy(false); }
+  };
+
+  const testEmail = async () => {
+    setBusy(true); setMsg("");
+    try {
+      const r = await adminApi.emailTest();
+      setMsg(r.ok ? `Email di prova inviata a ${r.to}.` : r.error || "Invio non riuscito.");
+    } catch { setMsg("Invio non riuscito."); } finally { setBusy(false); }
+  };
+
+  return (
+    <div className="card adm-form" style={{ marginBottom: 14 }}>
+      <h3>Notifiche sul telefono</h3>
+      {!supported && !isIos && <p className="muted">Questo browser non supporta le notifiche. Usa Chrome su Android o Safari su iPhone.</p>}
+      {isIos && !standalone && (
+        <div className="howto">
+          <b>Su iPhone, prima aggiungi il pannello alla schermata Home:</b>
+          <ol><li>Tocca il tasto <b>Condividi</b> di Safari (il quadrato con la freccia)</li><li>Scegli <b>Aggiungi alla schermata Home</b></li><li>Apri il pannello dalla nuova icona e torna qui</li></ol>
+        </div>
+      )}
+      {supported && (
+        <>
+          <p className="muted">{subscribed && perm === "granted" ? "Questo dispositivo riceve una notifica a ogni nuova richiesta." : "Attivale su questo telefono per sapere subito quando arriva una richiesta."}</p>
+          <div className="req-actions">
+            {!(subscribed && perm === "granted") && <button className="btn btn-sm" disabled={busy} onClick={enable}>Attiva notifiche</button>}
+            {subscribed && perm === "granted" && <button className="btn btn-sm btn-ghost" disabled={busy} onClick={test}>Invia notifica di prova</button>}
+          </div>
+        </>
+      )}
+      {!isIos && !standalone && supported && <p className="fine muted" style={{ textAlign: "left" }}>Consiglio: dal menu del browser scegli "Installa app" o "Aggiungi a schermata Home" per avere il pannello come un'app.</p>}
+
+      <h3>Email</h3>
+      <p className="muted">
+        Ogni richiesta ti arriva anche via email{hasOwnerEmail ? "" : " (inserisci la tua email qui sotto, in Contatti)"}. L'ospite riceve un'email quando invia la richiesta e quando la confermi o la rifiuti.
+      </p>
+      {mode === "live" ? <div className="req-actions"><button className="btn btn-sm btn-ghost" disabled={busy} onClick={testEmail}>Invia email di prova a me</button></div>
+        : <p className="fine muted" style={{ textAlign: "left" }}>In modalità demo le email non vengono inviate.</p>}
+      {msg && <p className="adm-msg">{msg}</p>}
+    </div>
   );
 }

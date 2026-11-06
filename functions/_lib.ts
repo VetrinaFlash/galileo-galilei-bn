@@ -6,6 +6,12 @@ export interface Env {
   ADMIN_PASSWORD: string;
   /** opzionale: link iCal separati da virgola, in aggiunta a quelli salvati dal pannello */
   ICAL_URLS?: string;
+  /** chiave API di Resend (resend.com) per inviare le email */
+  RESEND_API_KEY?: string;
+  /** mittente delle email, es. "B&B Galileo Galilei <prenotazioni@bbgalileogalilei.it>" */
+  EMAIL_FROM?: string;
+  /** email di Livia per gli avvisi (se vuota usa quella delle Impostazioni del pannello) */
+  OWNER_EMAIL?: string;
 }
 
 export const json = (data: unknown, status = 200, extra: Record<string, string> = {}) =>
@@ -16,6 +22,7 @@ const SCHEMA = [
   "CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)",
   "CREATE TABLE IF NOT EXISTS requests (id TEXT PRIMARY KEY, created_at TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'nuova', data TEXT NOT NULL)",
   "CREATE INDEX IF NOT EXISTS idx_requests_created ON requests (created_at DESC)",
+  "CREATE TABLE IF NOT EXISTS push_subs (endpoint TEXT PRIMARY KEY, data TEXT NOT NULL, created_at TEXT NOT NULL)",
 ];
 let schemaReady: Promise<void> | null = null;
 export function ensureSchema(env: Env) {
