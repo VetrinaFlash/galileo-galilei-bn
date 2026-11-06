@@ -1,0 +1,79 @@
+import type { Lang } from "./content";
+
+const dict = {
+  nav_rooms: { it: "Camere", en: "Rooms" },
+  nav_services: { it: "Servizi", en: "Amenities" },
+  nav_gallery: { it: "Foto", en: "Photos" },
+  nav_location: { it: "Dove siamo", en: "Location" },
+  nav_book: { it: "Prenota", en: "Book" },
+  checkin: { it: "Arrivo", en: "Check-in" },
+  checkout: { it: "Partenza", en: "Check-out" },
+  guests: { it: "Ospiti", en: "Guests" },
+  check_availability: { it: "Verifica disponibilità", en: "Check availability" },
+  why_title: { it: "Perché prenotare qui", en: "Why book with us" },
+  rooms_title: { it: "Le camere", en: "Our rooms" },
+  rooms_sub: { it: "Tutte con bagno privato, aria condizionata e Wi-Fi.", en: "All with private bathroom, air conditioning and Wi-Fi." },
+  from: { it: "da", en: "from" },
+  per_night: { it: "/ notte", en: "/ night" },
+  up_to: { it: "fino a", en: "up to" },
+  people: { it: "persone", en: "guests" },
+  request_room: { it: "Richiedi questa camera", en: "Request this room" },
+  book_title: { it: "Richiedi la tua prenotazione", en: "Request your booking" },
+  book_sub: {
+    it: "Scegli le date sul calendario. Le date barrate sono già occupate.",
+    en: "Pick your dates on the calendar. Crossed-out dates are already taken.",
+  },
+  pick_checkin: { it: "Seleziona il giorno di arrivo", en: "Select your arrival date" },
+  pick_checkout: { it: "Ora seleziona il giorno di partenza", en: "Now select your departure date" },
+  room: { it: "Camera", en: "Room" },
+  your_name: { it: "Il tuo nome", en: "Your name" },
+  notes: { it: "Note (orario di arrivo, animali, richieste)", en: "Notes (arrival time, pets, requests)" },
+  nights: { it: "notti", en: "nights" },
+  night: { it: "notte", en: "night" },
+  estimate: { it: "Stima del soggiorno", en: "Estimated stay" },
+  direct_discount: { it: "Sconto prenotazione diretta", en: "Direct booking discount" },
+  total: { it: "Totale indicativo", en: "Estimated total" },
+  send_whatsapp: { it: "Invia richiesta su WhatsApp", en: "Send request on WhatsApp" },
+  or_call: { it: "oppure chiama", en: "or call" },
+  no_payment: {
+    it: "Nessun pagamento online. Livia ti conferma disponibilità e prezzo finale.",
+    en: "No online payment. Livia will confirm availability and the final price.",
+  },
+  range_busy: { it: "Nel periodo scelto c'è una data occupata. Scegli altre date.", en: "Your selected range includes a booked date. Please choose other dates." },
+  services_title: { it: "Servizi", en: "Amenities" },
+  gallery_title: { it: "Il B&B in foto", en: "The B&B in photos" },
+  location_title: { it: "Dove siamo", en: "Location" },
+  location_sub: {
+    it: "Nel centro di Caserta, comodo per la Reggia, il teatro e la stazione.",
+    en: "In central Caserta, close to the Royal Palace, the theatre and the station.",
+  },
+  open_maps: { it: "Apri in Google Maps", en: "Open in Google Maps" },
+  reviews_title: { it: "Cosa dicono gli ospiti", en: "What guests say" },
+  reviews_count: { it: "recensioni", en: "reviews" },
+  faq_title: { it: "Domande frequenti", en: "FAQ" },
+  contact_title: { it: "Contatti", en: "Contact" },
+  photo_soon: { it: "Foto in arrivo", en: "Photo coming soon" },
+  write_whatsapp: { it: "Scrivi su WhatsApp", en: "Message on WhatsApp" },
+  call: { it: "Chiama", en: "Call" },
+  cin_label: { it: "CIN", en: "CIN" },
+  cin_missing: { it: "in fase di inserimento", en: "being added" },
+  made_by: { it: "Sito realizzato da", en: "Website by" },
+  prev_month: { it: "Mese precedente", en: "Previous month" },
+  next_month: { it: "Mese successivo", en: "Next month" },
+  synced: { it: "Calendario sincronizzato con i portali", en: "Calendar synced with booking platforms" },
+  demo_calendar: { it: "Calendario dimostrativo", en: "Demo calendar" },
+  close: { it: "Chiudi", en: "Close" },
+  clear_dates: { it: "Cancella date", en: "Clear dates" },
+} as const;
+
+export type Key = keyof typeof dict;
+export const t = (k: Key, lang: Lang) => dict[k][lang];
+
+export const months = {
+  it: ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"],
+  en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+};
+export const weekdays = {
+  it: ["L", "M", "M", "G", "V", "S", "D"],
+  en: ["M", "T", "W", "T", "F", "S", "S"],
+};
